@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -Wall -O2 -march=native
+CFLAGS = -Wall -march=native
 LDFLAGS =
 
 TARGET = quicksort
