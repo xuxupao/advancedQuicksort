@@ -1,8 +1,11 @@
 // Quick sort in C++
 
 #include <iostream>
+#include <time.h>
 //#include "papito.h"
 using namespace std;
+
+#define DATA_SIZE 999999
 
 // function to swap elements
 void swap(int *a, int *b) {
@@ -65,19 +68,57 @@ void quickSort(int array[], int low, int high) {
   }
 }
 
+// call this function to start a nanosecond-resolution timer
+struct timespec timer_start(){
+    struct timespec start_time;
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &start_time);
+    return start_time;
+}
+
+// call this function to end a timer, returning nanoseconds elapsed as a long
+long timer_end(struct timespec start_time){
+    struct timespec end_time;
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end_time);
+    long diffInNanos = (end_time.tv_sec - start_time.tv_sec) * (long)1e9 + (end_time.tv_nsec - start_time.tv_nsec);
+    return diffInNanos;
+}
+
 // Driver code
 int main() {
   //papito_init();
-  int data[] = {8, 7, 6, 1, 0, 9, 2};
-  int n = sizeof(data) / sizeof(data[0]);
+  int data[DATA_SIZE];
+
+  srand(time(NULL));
+
+  cout << "Generating data..." << endl;
+    
+  for (int i = 0; i < DATA_SIZE; i++) {
+    data[i] = rand();
+  }
   
-  cout << "Unsorted Array: \n";
-  printArray(data, n);
+
+  struct timespec start_time = timer_start();
+
+  //cout << "Unsorted Array: \n";
+  //printArray(data, DATA_SIZE);
   
   // perform quicksort on data
   //papito_start();
-  quickSort(data, 0, n - 1);
+  quickSort(data, 0, DATA_SIZE - 1);
   //papito_end();
-  cout << "Sorted array in ascending order: \n";
-  printArray(data, n);
+  //cout << "Sorted array in ascending order: \n";
+  //printArray(data, DATA_SIZE);
+
+  long time_taken = timer_end(start_time);
+
+  cout << "Sorting " << DATA_SIZE << " elements took " << time_taken << " ns" << endl;
+
+  for (int i = 0; i < DATA_SIZE - 1; i++) {
+    if(data[i] > data[i + 1]) {
+      cout << "Data consistency check failed!" << endl;
+      return -1;
+    }
+  }
+
+  return 0;
 }

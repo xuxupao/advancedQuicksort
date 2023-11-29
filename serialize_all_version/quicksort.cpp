@@ -1,8 +1,11 @@
 // Quick sort in C++
 
 #include <iostream>
+#include <time.h>
 //#include "papito.h"
 using namespace std;
+
+#define DATA_SIZE 999999
 
 void __attribute__((always_inline)) inline serialize(void) {
     asm (  
@@ -13,18 +16,18 @@ void __attribute__((always_inline)) inline serialize(void) {
 void swap(int *a, int *b) {
   serialize();
   int t = *a;
+  serialize();
   *a = *b;
+  serialize();
   *b = t;
+  serialize();
 }
 
 // function to print the array
 void printArray(int array[], int size) {
   int i;
-  serialize();
   for (i = 0; i < size; i++)
     cout << array[i] << " ";
-
-  serialize();
   cout << endl;
 }
 
@@ -34,38 +37,34 @@ int partition(int array[], int low, int high) {
   // select the rightmost element as pivot
   int pivot = array[high];
   serialize();
-  
+
   // pointer for greater element
   int i = (low - 1);
   serialize();
 
   // traverse each element of the array
   // compare them with the pivot
-  for (int j = low; j < high; j++) { 
+  for (int j = low; j < high; j++) {
     serialize();
     if (array[j] <= pivot) {
-        
+      serialize();  
       // if element smaller than pivot is found
       // swap it with the greater element pointed by i
       i++;
       
       // swap element at i with element at j
-      serialize();
       swap(&array[i], &array[j]);
     }
   }
   
   // swap pivot with the greater element at i
-  serialize();
   swap(&array[i + 1], &array[high]);
   
   // return the partition point
-  serialize();
   return (i + 1);
 }
 
 void quickSort(int array[], int low, int high) {
-  serialize();
   if (low < high) {
       
     // find the pivot element such that
@@ -84,27 +83,57 @@ void quickSort(int array[], int low, int high) {
   }
 }
 
+// call this function to start a nanosecond-resolution timer
+struct timespec timer_start(){
+    struct timespec start_time;
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &start_time);
+    return start_time;
+}
+
+// call this function to end a timer, returning nanoseconds elapsed as a long
+long timer_end(struct timespec start_time){
+    struct timespec end_time;
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end_time);
+    long diffInNanos = (end_time.tv_sec - start_time.tv_sec) * (long)1e9 + (end_time.tv_nsec - start_time.tv_nsec);
+    return diffInNanos;
+}
+
 // Driver code
 int main() {
   //papito_init();
-  int data[] = {8, 7, 6, 1, 0, 9, 2};
-  serialize();
-  int n = sizeof(data) / sizeof(data[0]);
-  serialize();  
+  int data[DATA_SIZE];
 
+  srand(time(NULL));
+
+  cout << "Generating data..." << endl;
+    
+  for (int i = 0; i < DATA_SIZE; i++) {
+    data[i] = rand();
+  }
   
-  cout << "Unsorted Array: \n";
-  serialize();
-  printArray(data, n);
-  serialize();
 
+  struct timespec start_time = timer_start();
+
+  //cout << "Unsorted Array: \n";
+  //printArray(data, DATA_SIZE);
+  
   // perform quicksort on data
   //papito_start();
-  serialize();
-  quickSort(data, 0, n - 1);
-  serialize();
+  quickSort(data, 0, DATA_SIZE - 1);
   //papito_end();
-  cout << "Sorted array in ascending order: \n";
-  serialize();
-  printArray(data, n);
+  //cout << "Sorted array in ascending order: \n";
+  //printArray(data, DATA_SIZE);
+
+  long time_taken = timer_end(start_time);
+
+  cout << "Sorting " << DATA_SIZE << " elements took " << time_taken << " ns" << endl;
+
+  for (int i = 0; i < DATA_SIZE - 1; i++) {
+    if(data[i] > data[i + 1]) {
+      cout << "Data consistency check failed!" << endl;
+      return -1;
+    }
+  }
+
+  return 0;
 }
