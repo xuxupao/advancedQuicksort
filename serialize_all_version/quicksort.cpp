@@ -5,8 +5,6 @@
 //#include "papito.h"
 using namespace std;
 
-#define DATA_SIZE 999999
-
 void __attribute__((always_inline)) inline serialize(void) {
     asm (  
   "serialize\n\t");
@@ -99,36 +97,40 @@ long timer_end(struct timespec start_time){
 }
 
 // Driver code
-int main() {
+int main(int argc, char *argv[]) {
+  int real_arguments = argc - 1;
+
+  if (real_arguments != 1) {
+    std::cout
+        << "Erro ao processar argumentos. Número incorreto de argumentos: "
+        << real_arguments << ".\n";
+    return 1;
+  }
+
+  char *first_real_argument = argv[1];
+  int data_size = atoi(first_real_argument);
   //papito_init();
-  int data[DATA_SIZE];
+  int data[data_size];
 
   srand(time(NULL));
 
   cout << "Generating data..." << endl;
     
-  for (int i = 0; i < DATA_SIZE; i++) {
+  for (int i = 0; i < data_size; i++) {
     data[i] = rand();
-  }
-  
+  }  
 
   struct timespec start_time = timer_start();
 
-  //cout << "Unsorted Array: \n";
-  //printArray(data, DATA_SIZE);
-  
-  // perform quicksort on data
   //papito_start();
-  quickSort(data, 0, DATA_SIZE - 1);
+  quickSort(data, 0, data_size - 1);
   //papito_end();
-  //cout << "Sorted array in ascending order: \n";
-  //printArray(data, DATA_SIZE);
 
   long time_taken = timer_end(start_time);
 
-  cout << "Sorting " << DATA_SIZE << " elements took " << time_taken << " ns" << endl;
+  cout << "Sorting " << data_size << " elements took " << time_taken << " ns" << endl;
 
-  for (int i = 0; i < DATA_SIZE - 1; i++) {
+  for (int i = 0; i < data_size - 1; i++) {
     if(data[i] > data[i + 1]) {
       cout << "Data consistency check failed!" << endl;
       return -1;
