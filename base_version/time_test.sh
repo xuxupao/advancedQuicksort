@@ -1,21 +1,25 @@
 #!/bin/bash
 
-rm resultados.csv
-# Compila a bagaça
-make all
+rm *.csv
+make clean
+# Limpa e compila
+make
 
-# Arquivo CSV saida
-echo "Iteracao,Tempo(ns)" > resultados.csv
+# Roda o programa principal com um parametro para o tamanho do array. Além disso, coleta o tempo de execução.
+run_and_capture_time() {
+    param=$1
+    output_file="${param}_output.csv"    
 
-for ((i=1; i<=10000; i++))
-do
-    start_time=$(date +%s%N)
-    ./quicksort
-    end_time=$(date +%s%N)    
+    for i in {1..1000}; do
+        time=$(./quicksort $param | grep -oP 'Sorting \d+ elements took \K\d+')
+        echo "$time" >> "$output_file"
+    done
+}
 
-    elapsed_time=$((end_time - start_time))
+parameters=(10 100 1000 10000 100000)
 
-    echo "$i,$elapsed_time" >> resultados.csv
+for param in "${parameters[@]}"; do
+    run_and_capture_time $param
 done
 
-make clean
+
