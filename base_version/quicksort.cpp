@@ -2,10 +2,10 @@
 
 #include <iostream>
 #include <time.h>
-//#include "papito.h"
+#include "papito.h"
 using namespace std;
 
-#define DATA_SIZE 999999
+//#define DATA_SIZE 999999
 
 // function to swap elements
 void swap(int *a, int *b) {
@@ -84,8 +84,9 @@ long timer_end(struct timespec start_time){
 }
 
 // Driver code
-int main() {
-  //papito_init();
+int main(int argc, char *argv[]) {
+  papito_init();
+  int DATA_SIZE = std::stoi(argv[1]);
   int data[DATA_SIZE];
 
   srand(time(NULL));
@@ -103,9 +104,9 @@ int main() {
   //printArray(data, DATA_SIZE);
   
   // perform quicksort on data
-  //papito_start();
+  papito_start();
   quickSort(data, 0, DATA_SIZE - 1);
-  //papito_end();
+  papito_end();
   //cout << "Sorted array in ascending order: \n";
   //printArray(data, DATA_SIZE);
 

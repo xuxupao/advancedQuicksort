@@ -2,20 +2,22 @@
 
 rm resultados.csv
 # Compila a bagaça
-make all
+#make all
 
 # Arquivo CSV saida
-echo "Iteracao,Tempo(ns)" > resultados.csv
+echo "Tamanho,Tempo,PRF_DM,BR_MSP" > resultados.csv
 
-for ((i=1; i<=10000; i++))
+for ((j=10; j<=100000; j=j*10))
 do
-    start_time=$(date +%s%N)
-    ./quicksort
-    end_time=$(date +%s%N)    
+    for ((i=0; i<1000; i++))
+    do
+        out=$(./quicksort $j)
+        elapsed_time=$(echo "$out" | grep "Sorting" | awk '{print $5}')
+        prf_dm=$(echo "$out" | awk 'NR==3{print $1}')
+        br_msp=$(echo "$out" | awk 'NR==3{print $2}')
 
-    elapsed_time=$((end_time - start_time))
-
-    echo "$i,$elapsed_time" >> resultados.csv
+        echo "$j,$elapsed_time,$prf_dm,$br_msp" >> resultados.csv
+    done
 done
 
-make clean
+#make clean
