@@ -11,13 +11,13 @@ for ((j=10; j<=100000; j=j*10))
 do
     for ((i=0; i<1000; i++))
     do
-        out=$(perf stat -e EXE_ACTIVITY.EXE_BOUND_0_PORTS,CYCLE_ACTIVITY.STALLS_TOTAL,RESOURCE_STALLS.SCOREBOARD ./quicksort $j)
+        out=$(perf stat -e EXE_ACTIVITY.EXE_BOUND_0_PORTS,CYCLE_ACTIVITY.STALLS_TOTAL,RESOURCE_STALLS.SCOREBOARD ./quicksort $j 2>&1)
         elapsed_time=$(echo "$out" | grep "Sorting" | awk '{print $5}')
         exe=$(echo "$out" | grep "EXE_ACTIVITY.EXE_BOUND_0_PORTS" | awk '{print $1}')
         total_stalls=$(echo "$out" | grep "CYCLE_ACTIVITY.STALLS_TOTAL" | awk '{print $1}')
         serial_stalls=$(echo "$out" | grep "RESOURCE_STALLS.SCOREBOARD" | awk '{print $1}')
         
-        out=$(perf stat ./quicksort $j)
+        out=$(perf stat ./quicksort $j 2>&1)
         bad_spec=$(echo "$out" | grep "cpu_core/topdown-bad-spec/" | awk '{print $4}')
         bad_spec=$(echo "$bad_spec" | sed 's/,/./; s/%//')
         fe_bound=$(echo "$out" | grep "cpu_core/topdown-fe-bound/" | awk '{print $4}')
