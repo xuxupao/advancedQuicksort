@@ -9,9 +9,8 @@ using namespace std;
 //#define DATA_SIZE 999999
 
 void __attribute__((always_inline)) inline serialize(void) {
-    asm volatile("cpuid"
-                 :
-                 : "a"(0));
+    asm (  
+  "serialize\n\t");
 }
 
 // function to swap elements
