@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <time.h>
-#include "papito.h"
 using namespace std;
 
 //#define DATA_SIZE 999999
