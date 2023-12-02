@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <time.h>
-#include "papito.h"
 using namespace std;
 
 //#define DATA_SIZE 999999
@@ -85,7 +84,6 @@ long timer_end(struct timespec start_time){
 
 // Driver code
 int main(int argc, char *argv[]) {
-  papito_init();
   int DATA_SIZE = std::stoi(argv[1]);
   int data[DATA_SIZE];
 
@@ -104,9 +102,7 @@ int main(int argc, char *argv[]) {
   //printArray(data, DATA_SIZE);
   
   // perform quicksort on data
-  papito_start();
   quickSort(data, 0, DATA_SIZE - 1);
-  papito_end();
   //cout << "Sorted array in ascending order: \n";
   //printArray(data, DATA_SIZE);
 
