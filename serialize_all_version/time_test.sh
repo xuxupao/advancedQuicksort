@@ -5,7 +5,7 @@ rm resultados_serial.csv
 #make all
 
 # Arquivo CSV saida
-echo "Tamanho,Tempo,EXE,TOTAL_STALLS,SERIAL_STALLS,BAD_SPEC,FE_BOUND,BE_BOUND,BR_MIS" > resultados.csv
+echo "Tamanho,Tempo,EXE,TOTAL_STALLS,SERIAL_STALLS,BAD_SPEC,FE_BOUND,BE_BOUND,BR_MIS" > resultados_serial.csv
 
 for ((j=10; j<=100000; j=j*10))
 do
