@@ -5,11 +5,12 @@ rm resultados_base.csv
 #make all
 
 # Arquivo CSV saida
-echo "Tamanho,Tempo,EXE,TOTAL_STALLS,SERIAL_STALLS,BAD_SPEC,FE_BOUND,BE_BOUND,BR_MIS" > resultados_base.csv
+echo "Tamanho,Exec. Time,No Exec.,Total Stalls,Serial Stalls,Bad Spec,FE Bound,BE Bound,Branch MSP" > resultados_base.csv
+lista=(100000 1000000 2000000)
 
-for ((j=10; j<=100000; j=j*10))
+for j in "${lista[@]}"
 do
-    for ((i=0; i<1000; i++))
+    for ((i=0; i<100; i++))
     do
         out=$(perf stat -e EXE_ACTIVITY.EXE_BOUND_0_PORTS,CYCLE_ACTIVITY.STALLS_TOTAL,RESOURCE_STALLS.SCOREBOARD ./quicksort $j 2>&1)
         elapsed_time=$(echo "$out" | grep "Sorting" | awk '{print $5}')
